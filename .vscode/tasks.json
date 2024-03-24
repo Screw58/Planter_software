@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "preRun",
+            "type": "shell",
+            "windows": {
+                "command": "clear & start openocd -c \"set ESP_RTOS none\" -f interface/ftdi/esp32_devkitj_v1.cfg -f board/esp-wroom-32.cfg & exit"
+            }
+        },
+        {
+            "label": "Programm_App_JTAG",
+            "type": "shell",
+            "windows": {
+                "command": "clear & start openocd -f interface/ftdi/esp32_devkitj_v1.cfg -f board/esp-wroom-32.cfg -c \"program_esp build/blink.bin 0x10000 verify exit\""
+            }
+        }
+    ]
+}
