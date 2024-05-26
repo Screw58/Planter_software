@@ -23,7 +23,7 @@ extern bool wifi_connected;
 #define TEN_MINS_IN_US     600000000ULL
 #define ONE_MINS_IN_US     60000000ULL
 
-// #define DEBUG
+#define DEBUG
 
 //==================================[PRIVATE TYPEDEFS]==================================//
 
@@ -81,7 +81,8 @@ static void GoToSleep(uint64_t time_in_us)
    AwsDisconnect();
    esp_wifi_stop();
    esp_sleep_enable_timer_wakeup(time_in_us);
-   esp_light_sleep_start();
+   // esp_light_sleep_start();
+   esp_deep_sleep_start();
 }
 //==================================[GLOBAL FUNCTIONS]==================================//
 
@@ -114,21 +115,26 @@ void app_main()
       .on_failed = WifiFailedHandler,
    };
 
+   ESP_LOGE("debug_flag", "program_start");
    /* Time for aht15 startup */
    vTaskDelay(pdMS_TO_TICKS(60));
 
    /* Peripherals initialization */
    I2C_Init();
    ADC_Init();
+   
+   aws_connected = false;
+   wifi_connected = false;
 
    AppWifiConnect(wifi_callback);
+   vTaskDelay(pdMS_TO_TICKS(2000));
    Aht15SensInitSw(&aht15sensor1);
 
    while(1)
    {
 
 
-      vTaskDelay(pdMS_TO_TICKS(3000));
+     // vTaskDelay(pdMS_TO_TICKS(3000));
 
       // aws_connected = false;
       // wifi_connected = false;
@@ -164,8 +170,8 @@ void app_main()
       ESP_LOGI("sensor_app", "====================================");
 #endif
       ESP_LOGI("debug_flag", "before go to sleep");
-      // GoToSleep(ONE_MINS_IN_US * 3);
-      vTaskDelay(pdMS_TO_TICKS(60000 * 3));
+      GoToSleep(ONE_MINS_IN_US * 3);
+      //vTaskDelay(pdMS_TO_TICKS(10000));
       ESP_LOGI("debug_flag", "after sleep");
    }
 }

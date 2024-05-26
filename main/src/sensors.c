@@ -159,7 +159,7 @@ static uint16_t BH1750_ReadResult(const BH1750Sens_t *sensor)
    uint8_t write_buf = BH1750_POWER_ON;
 
    /* There is need to turn on the sensor cause of it's automatically turned down measurement is done */
-   // I2C_WriteData(sensor->address, &write_buf, sizeof(write_buf));
+   I2C_WriteData(sensor->address, &write_buf, sizeof(write_buf));
 
    I2C_ReadData(sensor->address, read_buf, sizeof(read_buf));
 
