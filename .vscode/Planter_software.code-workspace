@@ -1,0 +1,55 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"actionButtons": {
+			"commands": [
+				{
+					"name": "Clean",
+					"color": "white",
+					"command": "idf.py fullclean"
+				},
+				{
+					"name": "Build",
+					"color": "lightgreen",
+					"command": "idf.py build"
+				},
+				{
+					"name": "Flash",
+					"color": "orange",
+					// "command": "idf.py flash -p COM6 -b 115200"
+					"command": "idf.py flash -p COM6 "
+				},
+				{
+					"name": "Monitor",
+					"color": "purple",
+					"command": "idf.py monitor -p COM6"
+				}
+			],
+			"defaultColor": "white",
+			"reloadButton": "↻",
+			"loadNpmCommands": false
+		},
+		"files.associations": {
+			"freertos.h": "c",
+			"esp_sleep.h": "c",
+			"esp_err.h": "c",
+			"adc_cali.h": "c",
+			"main.h": "c",
+			"adc_cali_scheme.h": "c",
+			"adc_types.h": "c",
+			"esp_attr.h": "c",
+			"adc_oneshot.h": "c",
+			"esp_system.h": "c",
+			"err_handler.h": "c",
+			"sensors.h": "c",
+			"app_wifi.h": "c",
+			"adc.h": "c",
+			"esp_log.h": "c"
+		},
+		"terminal.integrated.defaultProfile.windows": "CommandPrompt"
+	}
+}

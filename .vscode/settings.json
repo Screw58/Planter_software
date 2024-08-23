@@ -1,0 +1,33 @@
+{
+    "actionButtons": {
+        "commands": [
+            {
+                "name": "Clean",
+                "color": "white",
+                "command": "idf.py fullclean"
+            },
+            {
+                "name": "Build",
+                "color": "lightgreen",
+                "command": "idf.py build"
+            },
+            {
+                "name": "Flash",
+                "color": "orange",
+                "command": "idf.py flash -p COM8 -b 115200"
+            },
+            {
+                "name": "Monitor",
+                "color": "purple",
+                "command": "idf.py monitor -p COM8"
+            },
+        ],
+        "defaultColor": "white",
+        "reloadButton": "↻",
+        "loadNpmCommands": false
+    },
+    "files.associations": {
+        "freertos.h": "c",
+        "esp_sleep.h": "c"
+    },
+}
