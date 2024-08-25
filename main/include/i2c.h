@@ -13,13 +13,11 @@
 #include "driver/i2c_types.h"
 #include "esp_err.h"
 
-
 //=================================[MACROS AND DEFINES]=================================//
 #define I2C_MASTER_SDA_IO     GPIO_NUM_21
 #define I2C_MASTER_SCL_IO     GPIO_NUM_22
 #define I2C_MASTER_TIMEOUT_MS 1000
 #define TEST_I2C_PORT         0
-
 
 //======================================[TYPEDEFS]======================================//
 
@@ -28,7 +26,7 @@
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 
 /*!
- * \brief: Initialize uC peripherals for AHT15 sensor handling
+ * \brief: Initialize uC peripherals for  handling
  * \details: Set up gpio pins for i2c communication
  */
 void I2C_Init(void);

@@ -319,5 +319,5 @@ void TakeSensorMeasurements(AllSensorsReadings_t *sensors_readings)
    sensors_readings->temperature = aht15sensor1.temperature;
    sensors_readings->humidity = aht15sensor1.humidity;
    sensors_readings->illuminance = lightsensor1.illuminance;
-   AreMeasurementsReady = true;
+   // AreMeasurementsReady = true;
 }

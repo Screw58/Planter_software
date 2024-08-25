@@ -17,9 +17,6 @@
 //==================================[STATIC VARIABLES]==================================//
 i2c_master_bus_handle_t i2c_bus_handle;
 
-i2c_master_dev_handle_t bh1750sens_dev_handle;
-i2c_master_dev_handle_t aht15sens_dev_handle;
-
 //==================================[GLOBAL VARIABLES]==================================//
 
 //=============================[LOCAL FUNCTION PROTOTYPES]==============================//
@@ -29,7 +26,7 @@ i2c_master_dev_handle_t aht15sens_dev_handle;
 //==================================[GLOBAL FUNCTIONS]==================================//
 void I2C_Init(void)
 {
-   i2c_master_bus_config_t i2c_mst_config = {
+   i2c_master_bus_config_t i2c_bus_config = {
       .clk_source = I2C_CLK_SRC_DEFAULT,
       .i2c_port = TEST_I2C_PORT,
       .scl_io_num = I2C_MASTER_SCL_IO,
@@ -38,7 +35,7 @@ void I2C_Init(void)
       .flags.enable_internal_pullup = true,
    };
 
-   ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_mst_config, &i2c_bus_handle));
+   ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_config, &i2c_bus_handle));
 }
 
 void I2C_Add_device_to_I2Cbus(i2c_master_dev_handle_t *const i2c_dev_handle, const uint8_t addr)
