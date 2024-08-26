@@ -23,6 +23,7 @@
 
 /* User libraries */
 #include "app_wifi.h"
+#include "battery.h"
 #include "err_handler.h"
 #include "mqtt.h"
 #include "sensors.h"

@@ -39,6 +39,7 @@ void ADC_Init(void)
 
    ESP_ERROR_CHECK(adc_oneshot_new_unit(&adc_cfg, &AdcSoilSens_handle));
    ESP_ERROR_CHECK(adc_oneshot_config_channel(AdcSoilSens_handle, ADC_SOILSENS_ADC_CH6, &adc1_ch0_cfg));
+   ESP_ERROR_CHECK(adc_oneshot_config_channel(AdcSoilSens_handle, ADC_BATTERY_ADC_CH7, &adc1_ch0_cfg));
 
    adc_cali_line_fitting_config_t cali_config = {
       .unit_id = ADC_UNIT_1,

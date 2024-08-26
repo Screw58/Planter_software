@@ -9,6 +9,7 @@
                              "adc.c"
                              "i2c.c"
                              "mqtt.c"
+                             "battery.c"
                     INCLUDE_DIRS "." "../include" 
                     PRIV_REQUIRES "nvs_flash" 
                     REQUIRES "mbedtls" "mqtt" "esp_adc" "esp_driver_i2c" "esp_wifi"

@@ -132,6 +132,7 @@ void app_main()
          // AreMeasurementsReady = false;
          TakeSensorMeasurements(&AllSensorsReadings);
          ErrId = CheckErrors();
+         CheckBatteryVoltage();
          // PrepareDataToSendAWS(&soilsensor1, &aht15sensor1, &lightsensor1);
          ESP_LOGI("debug_flag", "before publish to AWS");
          // while(!AreMeasurementsReady)

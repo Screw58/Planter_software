@@ -17,8 +17,10 @@
 #include "esp_err.h"
 
 //=================================[MACROS AND DEFINES]=================================//
-#define ADC_SOILSENS_ADC_CH6 ADC_CHANNEL_6
-
+#define ADC_SOILSENS_ADC_CH6 ADC_CHANNEL_6 /*IO 34*/
+#define ADC_BATTERY_ADC_CH7  ADC_CHANNEL_7 /*IO 35*/
+#define ADC_MIN_VOLT         0
+#define ADC_MAX_VOLT         3100          /*unit mV */
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//
