@@ -35,6 +35,7 @@ static void Mqtt_EventHandler(void *handler_args, esp_event_base_t base, int32_t
       case MQTT_EVENT_CONNECTED:
          ESP_LOGI(TAG_MQTT, "mqtt broker connected");
          mqtt_connected = true;
+         ESP_LOGI("mqtt", "MQTT CONNECTED!!");
          break;
       case MQTT_EVENT_DATA:
          ESP_LOGI(TAG_MQTT, "mqtt receive message");
