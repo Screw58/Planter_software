@@ -13,5 +13,5 @@
                              "led.c"
                     INCLUDE_DIRS "." "../include" 
                     PRIV_REQUIRES "nvs_flash" 
-                    REQUIRES "mbedtls" "mqtt" "esp_adc" "esp_driver_i2c" "esp_wifi" "esp_driver_ledc" "esp_driver_gpio"
+                    REQUIRES "mbedtls" "mqtt" "esp_adc" "esp_driver_i2c" "esp_wifi" "esp_driver_ledc" "esp_driver_gpio" "esp_driver_gptimer"
                     )

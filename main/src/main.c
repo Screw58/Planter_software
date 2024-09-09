@@ -96,6 +96,8 @@ void HardwareInit(void)
    /* Peripherals initialization */
    ADC_Init();
    I2C_Init();
+   LED_Init();
+   Turn_LED_On(LED_COLOUR_ORANGE);
 }
 //==================================[GLOBAL FUNCTIONS]==================================//
 
@@ -129,6 +131,7 @@ void app_main()
       ESP_LOGI("debug_flag", "before checking conditions");
       if((wifi_connected == true) && (mqtt_connected == true))
       {
+         Turn_LED_On(LED_COLOUR_CYAN);
          // AreMeasurementsReady = false;
          TakeSensorMeasurements(&AllSensorsReadings);
          ErrId = CheckErrors();
@@ -141,6 +144,10 @@ void app_main()
          // }
          // Mqtt_Publish_Readings(&AllSensorsReadings, ErrId);
          ESP_LOGI("debug_flag", "after publish readings func");
+         Turn_LED_Off();
+         vTaskDelay(pdMS_TO_TICKS(3000));
+         Blink_LED(LED_COLOUR_PINK, 8, 200);
+         vTaskDelay(pdMS_TO_TICKS(6000));
 
 #ifdef DEBUG
          PrintDebugInfo();
