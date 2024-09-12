@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/Components",
                 "C:/Espressif/frameworks/esp-idf-v5.3/**",
                 "C:/Espressif/frameworks/esp-idf-v5.3/components/driver/**",
                 "C:/Espressif/frameworks/esp-idf-v5.3/components/esp_adc/include/**"

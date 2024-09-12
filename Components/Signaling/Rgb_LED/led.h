@@ -1,8 +1,8 @@
 /*!
 *******************************************************
-* \file:
-* \date:
-* \author:
+* \file: led.c
+* \date: 07.09.2024
+* \author: Jacek Twardoch
 * \brief:
 ********************************************************/
 #ifndef LED_H_
@@ -84,6 +84,9 @@ void Turn_LED_Off(void);
  */
 void Blink_LED(led_colours_t colour, uint8_t blink_num, uint16_t blink_period_ms);
 
-
+/*!
+ * \brief: Read given channel of ADC and return value in mV unit
+ * \details:
+ */
 bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx);
 #endif

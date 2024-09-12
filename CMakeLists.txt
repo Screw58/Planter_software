@@ -6,3 +6,13 @@ cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(Planter)
+
+set(EXTRA_COMPONENT_DIRS(${PROJECT_SOURCE_DIR}/Components/Main) )
+set(COMPONENT_DIRS(${PROJECT_SOURCE_DIR}/Components))
+# add_subdirectory(Components/Battery)
+# add_subdirectory(Components/ErrHandler)
+# add_subdirectory(Components/Main)
+# add_subdirectory(Components/Network)
+# add_subdirectory(Components/Peripherals)
+# add_subdirectory(Components/Sensors)
+# add_subdirectory(Components/Signaling)
