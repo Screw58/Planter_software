@@ -1,41 +1,32 @@
 /*!
 *******************************************************
-* \file:
+* \file: McuState.h
 * \date:
 * \author:
 * \brief:
 ********************************************************/
-
-#ifndef MQTT_H_
-#define MQTT_H_
-
+#ifndef MCU_STATE_H_
+#define MCU_STATE_H_
 //======================================[INCLUDES]======================================//
-#include "err_handler.h"
-#include "esp_log.h"
-#include "mqtt_client.h"
-#include "sensors.h"
-
-
+#include "esp_sleep.h"
 //=================================[MACROS AND DEFINES]=================================//
-#define TEST_TOPIC      "/home/sensors"
-#define MQTT_BROKER_URL "mqtt://192.168.0.100"
-#define TAG_MQTT        "mqtt_file"
+#define WAKEUP_BUTTON_PIN GPIO_NUM_4
 //======================================[TYPEDEFS]======================================//
+typedef struct {
+   int hour;
+   int mins;
+} HourAndMins_t;
+
 
 //=================================[EXPORTED VARIABLES]=================================//
-extern esp_mqtt_client_handle_t mqtt_client;
+
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 /*!
- * \brief:
- * \details:
+ * \brief: This function prepares and puts MCU to sleep
+ * \details: Before sleep aws client is disconnected and wifi module is turned off
  */
-void Mqtt_Connect(void);
+void GoToSleep(void);
 
-/*!
- * \brief:
- * \details:
- */
-void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings, const ErrorId_t err_id);
+void CheckWakeUpReason(void);
 
-void Mqtt_Disconnect(void);
 #endif

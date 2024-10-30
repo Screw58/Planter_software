@@ -5,4 +5,5 @@
  idf_component_register(SRCS     "RGB_LED/led.c"
                     INCLUDE_DIRS "." "./RGB_LED" 
                     REQUIRES "esp_driver_ledc" "esp_driver_gpio" "esp_driver_gptimer" 
+                    PRIV_REQUIRES "Peripherals"
                     )

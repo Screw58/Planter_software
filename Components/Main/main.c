@@ -10,16 +10,11 @@
 //======================================[INCLUDES]======================================//
 #include "main.h"
 #include "esp_log.h"
+
 //==================================[EXTERN VARIABLES]==================================//
 
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
 #define TAG_MAIN "main_app"
-
-/*These are defined various times for debug purposes*/
-#define TWELVE_HOURS_IN_US 43200000000ULL
-#define ONE_HOUR_IN_US     3600000000ULL
-#define TEN_MINS_IN_US     600000000ULL
-#define ONE_MINS_IN_US     60000000ULL
 
 #define DEBUG
 //==================================[PRIVATE TYPEDEFS]==================================//
@@ -44,11 +39,6 @@ static void WifiConnectedHandler(void);
  */
 static void WifiFailedHandler(void);
 
-/*!
- * \brief: This function prepares and puts MCU to sleep
- * \details: Before sleep aws client is disconnected and wifi module is turned off
- */
-static void GoToSleep(uint64_t time_in_us);
 
 /*!
  * \brief:
@@ -71,14 +61,6 @@ static void WifiFailedHandler(void)
    ESP_LOGE(TAG_MAIN, "Wifi connection failed");
 }
 
-static void GoToSleep(uint64_t time_in_us)
-{
-   esp_mqtt_client_stop(mqtt_client);
-   esp_wifi_stop();
-   esp_sleep_enable_timer_wakeup(time_in_us);
-   // esp_light_sleep_start();
-   esp_deep_sleep_start();
-}
 
 static void PrintDebugInfo(void)
 {
@@ -99,6 +81,8 @@ void HardwareInit(void)
    LED_Init();
    Turn_LED_On(LED_COLOUR_ORANGE);
 }
+
+
 //==================================[GLOBAL FUNCTIONS]==================================//
 
 void app_main()
@@ -107,6 +91,7 @@ void app_main()
 
    wifi_callback.on_connected = WifiConnectedHandler;
    wifi_callback.on_failed = WifiFailedHandler;
+   CheckWakeUpReason();
 
    HardwareInit();
    SensorsInit();
@@ -154,8 +139,9 @@ void app_main()
 #endif
       }
       ESP_LOGI("debug_flag", "before go to sleep");
-      GoToSleep(ONE_MINS_IN_US * 3);
-      // vTaskDelay(pdMS_TO_TICKS(10000));
+      vTaskDelay(pdMS_TO_TICKS(7000));
+      GoToSleep();
+      // vTaskDelay(pdMS_TO_TICKS(5000));
       ESP_LOGI("debug_flag", "after sleep");
    }
 }

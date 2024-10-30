@@ -13,11 +13,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
 
 /* Espressif libraries */
 #include "esp_log.h"
-#include "esp_sleep.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -26,14 +25,15 @@
 #include "battery.h"
 #include "err_handler.h"
 #include "led.h"
+#include "McuState.h"
 #include "mqtt.h"
 #include "sensors.h"
-
 
 
 //=================================[MACROS AND DEFINES]=================================//
 #define ERROR_PRESENT     1
 #define ERROR_NOT_PRESENT 0
+
 
 #define WAIT_IN_MS(x)     (vTaskDelay(pdMS_TO_TICKS(x)))
 //======================================[TYPEDEFS]======================================//
@@ -42,4 +42,6 @@
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 // void HardwareInit(void);
+
+
 #endif

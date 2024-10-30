@@ -60,6 +60,11 @@ void Mqtt_Connect(void)
    esp_mqtt_client_start(mqtt_client);
 }
 
+void Mqtt_Disconnect(void)
+{
+   esp_mqtt_client_stop(mqtt_client);
+}
+
 void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings, const ErrorId_t err_id)
 {
    char buffer[150] = { 0 };
