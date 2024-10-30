@@ -11,6 +11,9 @@
 //======================================[INCLUDES]======================================//
 #include "app_wifi.h"
 #include "err_handler.h"
+#include "esp_netif_sntp.h"
+
+// #include "esp_sntp.h"
 // #include "mqtt_client.h"
 // #include "secret_data.h"
 
@@ -28,12 +31,16 @@
 //==================================[STATIC VARIABLES]==================================//
 static int cnt_retry = 0;
 static wifi_conn_params_f wifi_params;
-
+static struct timeval time_in_sec;
 // static esp_mqtt_client_handle_t mqtt_client = NULL;
 // static void handle_mqtt_events (void *handler_args, esp_event_base_t base, int32_t event_id, void * event_data);
 //==================================[GLOBAL VARIABLES]==================================//
 // bool wifi_connected = false;
 // bool mqtt_connected = false;
+// void time_sync_callback(struct timeval *tv);
+struct tm time_and_date = { 0 };
+struct timeval *tv = { 0 };
+struct tm *time_and_date_ptr;
 //=============================[LOCAL FUNCTION PROTOTYPES]==============================//
 /*!
  * \brief: Handler for some events occurence during wifi connection process
@@ -117,108 +124,44 @@ void AppWifiConnect(wifi_conn_params_f wifi_callback)
    wifi_params = wifi_callback;
    WifiConnect();
 }
-//    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-//    wifi_config_t wifi_config = {
-// 	 .sta =
-// 	     {
-// 		   .ssid = WIFI_SSID,
-// 		   .password = WIFI_PASS,
-// 		   .threshold.authmode = WIFI_AUTH_WPA2_PSK,
-// 		   .pmf_cfg = {.capable = true, .required = false},
-// 	     },
-//    };
 
-//    if(nvs_flash_init() != ESP_OK)
-//    {
-//       nvs_flash_erase();
-//       nvs_flash_init();
-//    }
-//    esp_event_loop_create_default();
-//    esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &WifiEventHandler, NULL);
-//    esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &WifiEventHandler, NULL);
+HourAndMins_t SNTP_ReadTime(void)
+{
+   time_t now;
+   HourAndMins_t RetTime = { 0 };
+   esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG_MULTIPLE(
+         1,
+         ESP_SNTP_SERVER_LIST("pool.ntp.org"));  // !< TODO zmienić ten default na normalny init    "time.windows.com"
+   // config.sync_cb = time_sync_callback;
+   esp_netif_sntp_init(&config);
+   esp_netif_sntp_start();
+   esp_netif_sntp_sync_wait(pdMS_TO_TICKS(10000));
+   time(&now);
+   setenv("TZ", "CET-1CEST,M3.5.0/2,M10.5.0/3", 1);
+   tzset();
+   time_and_date_ptr = localtime(&now);
+   if(time_and_date_ptr == NULL)
+   {
+      ESP_LOGE("time", "NULL pointer was returned from localtime() function! ");
+   }
+   else
+   {
+      RetTime.hour = time_and_date_ptr->tm_hour;
+      RetTime.mins = time_and_date_ptr->tm_min;
 
-//    esp_netif_init();
+      ESP_LOGI("time", "time printed from function");
+      ESP_LOGI("time", "time_second: %d ", time_and_date_ptr->tm_sec);
+      ESP_LOGI("time", "time_mins: %d ", time_and_date_ptr->tm_min);
+      ESP_LOGI("time", "time_hours: %d ", time_and_date_ptr->tm_hour);
+      ESP_LOGI("time", "tm_mday: %d ", time_and_date_ptr->tm_mday);
+      ESP_LOGI("time", "tm_year: %d ", time_and_date_ptr->tm_year);
+      ESP_LOGI("time", "tm_wday: %d \n", time_and_date_ptr->tm_wday);
+   }
 
-//    esp_netif_create_default_wifi_sta();
+   return RetTime;
+}
 
-//    esp_wifi_init(&cfg);
-//    esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
-//    esp_wifi_set_mode(WIFI_MODE_STA);
-//    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
-//    esp_wifi_start();
-// }
-
-
-// void PublishReadingsToAws(const AllSensorsReadings_t *AllSensorsReadings, const ErrorId_t err_id)
-// {
-//    char buffer[150];
-//    esp_mqtt_client_config_t mqtt_config = {
-//       .broker.address.uri = MQTT_BROKER_URL;
-//    }
-//    // IoT_Error_t result;
-//    // IoT_Publish_Message_Params message;
-//    ESP_LOGI("debug_flag", "before aws-mqtt-yield");
-//    // result = aws_iot_mqtt_yield(&aws_client, 500);
-//    // if(result != SUCCESS && result != NETWORK_RECONNECTED)
-//    // {
-//    //    ESP_LOGI("debug_flag", "in if condition ERROR!");
-//    //    result = aws_iot_mqtt_yield(&aws_client, 500);
-//    //    ESP_LOGI("debug_flag", "result of the second connection: %d", result);
-//    //    // return;
-//    // }
-
-//    memset((void *)&message, 0, sizeof(message));
-//    // itoa(temp, buffer, 10);
-//    sprintf(buffer,
-//            "{ \"soilhumidity\" : %d , \"temperature\" : %.2f , \"humidity\" : %.2f , \"illuminance\" : %d , \"errors\" : %d,
-//            \"device_id\" "
-//            ": \"sensor_3\"}",
-//            AllSensorsReadings->soil_moisture,
-//            AllSensorsReadings->temperature,
-//            AllSensorsReadings->humidity,
-//            (uint16_t)AllSensorsReadings->illuminance,
-//            err_id);
-
-//    message.qos = QOS0;
-//    message.payload = (void *)buffer;
-//    message.payloadLen = strlen(buffer);
-//    // aws_iot_mqtt_publish(&aws_client, TEMP_TOPIC, strlen(TEMP_TOPIC), &message);
-//    ESP_LOGI("debug_flag", "before mqtt publish");
-//    aws_iot_mqtt_publish(&aws_client, test_topic, strlen(test_topic), &message);
-// }
-
-// void WifiConnectedHandler(void)
-// {
-//    ESP_LOGE(TAG, "Wifi succesfully connected!");
-//    wifi_connected = true;
-//    // ConnectAwsMqtt();
-//    esp_mqtt_client_config_t mqtt_cfg = {
-//       .uri = MQTT_BROKER_URL,
-//    };
-//    mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
-//    esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, handle_mqtt_events, NULL);
-//    esp_mqtt_client_start(mqtt_client);
-//    // apptemp_init(publish_reading)
-// }
-
-
-// static void handle_mqtt_events(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
-// {
-//    esp_mqtt_event_handle_t event = event_data;
-//    switch((esp_mqtt_event_id_t)event_id)
-//    {
-//       case MQTT_EVENT_CONNECTED:
-//          ESP_LOGI(TAG, "mqtt broker connected");
-//          mqtt_connected = true;
-//          break;
-//       case MQTT_EVENT_DATA:
-//          ESP_LOGI(TAG, "mqtt receive message");
-//          break;
-//       case MQTT_EVENT_ERROR:
-//          ESP_LOGE(TAG, "errtype: %d", event->error_handle->error_type);
-//          break;
-//       default:
-//          ESP_LOGI(TAG, "event: %d", event_id);
-//          break;
-//    }
-// }
+void Wifi_Stop(void)
+{
+   esp_wifi_stop();
+}
