@@ -29,15 +29,23 @@
 
 //======================================[TYPEDEFS]======================================//
 /* callback functions prototypes for wifi connection status*/
-typedef void (*OnConnected_f)(void);
-typedef void (*OnFailed_f)(void);
+typedef void (*WifiReconnecting_f)(uint8_t);
+typedef void (*WifiFailed_f)(void);
+typedef void (*WifiConnected_f)(void);
 
 typedef struct {
-   OnConnected_f on_connected;
-   OnFailed_f on_failed;
-} wifi_conn_params_f;
+   WifiReconnecting_f WifiOnReconnecting;
+   WifiFailed_f WifiOnfailed;
+   WifiConnected_f WifiOnConnected;
+} Wifi_Callback_t;
 
-
+typedef enum
+{
+   WIFI_INIT,
+   WIFI_DISCONNECTED,
+   WIFI_RECONNECTING,
+   WIFI_CONNECTED,
+} WifiStatus_t;
 //=================================[EXPORTED VARIABLES]=================================//
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
@@ -52,9 +60,13 @@ typedef struct {
  *             -Initialize wifi driver
  *             -Set mode and start wifi
  */
-void AppWifiConnect(wifi_conn_params_f wifi_callback);
+void WifiConnect(void);
+
+void WifiRegisterCallbacks(Wifi_Callback_t Wifi_StatesCallbacks);
 HourAndMins_t SNTP_ReadTime(void);
 // static void handle_mqtt_events(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
-void publish_reading(const AllSensorsReadings_t *AllSensorsReadings, const ErrorId_t err_id);
+// void publish_reading(const AllSensorsReadings_t *AllSensorsReadings, const ErrorId_t err_id);
 void Wifi_Stop(void);
+WifiStatus_t GetWifiStatus(void);
+
 #endif

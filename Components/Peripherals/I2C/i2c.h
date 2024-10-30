@@ -40,12 +40,12 @@ void I2C_Add_device_to_I2Cbus(i2c_master_dev_handle_t *const i2c_dev_handle, con
  * \brief: Function reads data from I2C bus
  * \details: That function handles read data in a way described by Espressif documentation
  */
-void I2C_ReadData(i2c_master_dev_handle_t dev_handle, uint8_t *read_buf, const size_t data_len);
+esp_err_t I2C_ReadData(i2c_master_dev_handle_t dev_handle, uint8_t *read_buf, const size_t data_len);
 
 /*!
  * \brief: Function sends given data through I2C bus
  * \details: That function handles write data in a way described by Espressif documentation
  */
-void I2C_WriteData(i2c_master_dev_handle_t dev_handle, const uint8_t *write_buf, const size_t data_len);
+esp_err_t I2C_WriteData(i2c_master_dev_handle_t dev_handle, const uint8_t *write_buf, const size_t data_len);
 
 #endif

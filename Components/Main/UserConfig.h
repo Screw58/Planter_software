@@ -1,24 +1,27 @@
 /*!
 *******************************************************
-* \file:battery.h
-* \date:25.08.2024
-* \author: Jacek Twardoch
+* \file:
+* \date:
+* \author:
 * \brief:
 ********************************************************/
-
-#ifndef BATTERY_H_
-#define BATTERY_H_
-
+#ifndef USERCONFIG_H_
+#define USERCONFIG_H_
 //======================================[INCLUDES]======================================//
-#include "adc.h"
-//=================================[MACROS AND DEFINES]=================================//
-#define BATTERY_ADC_CHANNEL ADC_CHANNEL_7 /*IO 35*/
 
+//=================================[MACROS AND DEFINES]=================================//
+#define MEAS_EVENTS_AMOUNT        2
+#define WAKEUP_EVENT_HOUR_1       8
+#define WAKEUP_EVENT_MINS_1       0
+#define WAKEUP_EVENT_HOUR_2       19
+#define WAKEUP_EVENT_MINS_2       15
+
+#define MAX_NO_CONNECTION_ATTEMPS 3
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
-void CheckBatteryVoltage(void);
-void BatteryInit(void);
+void RegisterAllCallbacks(void);
+
 #endif

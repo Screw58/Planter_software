@@ -24,10 +24,16 @@
 //==================================[LOCAL FUNCTIONS]===================================//
 
 //==================================[GLOBAL FUNCTIONS]==================================//
+void BatteryInit(void)
+{
+   ADC_ConfigChannel(BATTERY_ADC_CHANNEL);
+}
+
 void CheckBatteryVoltage(void)
 {
+   esp_err_t EspErr = ESP_OK;
    uint32_t battery_voltage_mV = 0;
-   battery_voltage_mV = ADC_Read_mV(ADC_BATTERY_ADC_CH7);
+   EspErr = ADC_Read_mV(BATTERY_ADC_CHANNEL, &battery_voltage_mV);
 
    if((battery_voltage_mV > ADC_MIN_VOLT) && (battery_voltage_mV < ADC_MAX_VOLT))
    {

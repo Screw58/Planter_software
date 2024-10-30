@@ -21,9 +21,25 @@
 #define MQTT_BROKER_URL "mqtt://192.168.0.100"
 #define TAG_MQTT        "mqtt_file"
 //======================================[TYPEDEFS]======================================//
+typedef void (*MqttConnected_f)(void);
+typedef void (*MqttError_f)(void);
+typedef void (*MqttDataRcv_f)(void);
 
+typedef struct {
+   MqttConnected_f MqttConnectedCbk;
+   MqttError_f MqttErrorCbk;
+   MqttDataRcv_f MqttDataRcvCbk;
+} Mqtt_Callback_t;
+
+typedef enum
+{
+   MQTT_INIT,
+   MQTT_CONNECTED,
+   MQTT_ERROR,
+   MQTT_DATA_RECEIVED,
+} MqttStatus_t;
 //=================================[EXPORTED VARIABLES]=================================//
-extern esp_mqtt_client_handle_t mqtt_client;
+// extern esp_mqtt_client_handle_t mqtt_client;
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 /*!
  * \brief:
@@ -36,5 +52,23 @@ void Mqtt_Connect(void);
  * \details:
  */
 void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings, const ErrorId_t err_id);
+
+/*!
+ * \brief:
+ * \details:
+ */
+MqttStatus_t MqttGetStatus(void);
+
+/*!
+ * \brief:
+ * \details:
+ */
+void Mqtt_Disconnect(void);
+
+/*!
+ * \brief:
+ * \details:
+ */
+void MqttRegisterCallbacks(Mqtt_Callback_t UserCallbacks);
 
 #endif

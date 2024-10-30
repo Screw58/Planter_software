@@ -9,7 +9,7 @@
 //======================================[INCLUDES]======================================//
 #include "mqtt.h"
 //==================================[EXTERN VARIABLES]==================================//
-extern bool mqtt_connected;
+
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
 
 //==================================[PRIVATE TYPEDEFS]==================================//
@@ -18,6 +18,8 @@ extern bool mqtt_connected;
 
 //==================================[GLOBAL VARIABLES]==================================//
 esp_mqtt_client_handle_t mqtt_client;
+Mqtt_Callback_t MqttCallbacks;
+MqttStatus_t Mqtt_status;
 //=============================[LOCAL FUNCTION PROTOTYPES]==============================//
 /*!
  * \brief:
@@ -33,15 +35,16 @@ static void Mqtt_EventHandler(void *handler_args, esp_event_base_t base, int32_t
    switch((esp_mqtt_event_id_t)event_id)
    {
       case MQTT_EVENT_CONNECTED:
-         ESP_LOGI(TAG_MQTT, "mqtt broker connected");
-         mqtt_connected = true;
-         ESP_LOGI("mqtt", "MQTT CONNECTED!!");
+         Mqtt_status = MQTT_CONNECTED;
+         MqttCallbacks.MqttConnectedCbk();
          break;
       case MQTT_EVENT_DATA:
-         ESP_LOGI(TAG_MQTT, "mqtt receive message");
+         Mqtt_status = MQTT_DATA_RECEIVED;
+         MqttCallbacks.MqttDataRcvCbk();
          break;
       case MQTT_EVENT_ERROR:
-         ESP_LOGE(TAG_MQTT, "errtype: %d", event->error_handle->error_type);
+         Mqtt_status = MQTT_ERROR;
+         MqttCallbacks.MqttErrorCbk();
          break;
       default:
          ESP_LOGI(TAG_MQTT, "event: %ld", event_id);
@@ -55,6 +58,8 @@ void Mqtt_Connect(void)
    const esp_mqtt_client_config_t mqtt_cfg = {
       .broker.address.uri = MQTT_BROKER_URL,
    };
+
+   Mqtt_status = MQTT_INIT;
    mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
    esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, Mqtt_EventHandler, mqtt_client);
    esp_mqtt_client_start(mqtt_client);
@@ -80,4 +85,19 @@ void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings,
    {
       esp_mqtt_client_publish(mqtt_client, TEST_TOPIC, buffer, 0, 2, 0);
    }
+}
+
+void MqttRegisterCallbacks(Mqtt_Callback_t UserCallbacks)
+{
+   MqttCallbacks = UserCallbacks;
+}
+
+void Mqtt_Disconnect(void)
+{
+   esp_mqtt_client_stop(mqtt_client);
+}
+
+MqttStatus_t MqttGetStatus(void)
+{
+   return Mqtt_status;
 }
