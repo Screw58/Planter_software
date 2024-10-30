@@ -24,7 +24,7 @@
 #include "sensors.h"
 
 #include "esp_wifi.h"
-
+#include "McuState.h"
 //=================================[MACROS AND DEFINES]=================================//
 
 //======================================[TYPEDEFS]======================================//
@@ -53,7 +53,8 @@ typedef struct {
  *             -Set mode and start wifi
  */
 void AppWifiConnect(wifi_conn_params_f wifi_callback);
-
+HourAndMins_t SNTP_ReadTime(void);
 // static void handle_mqtt_events(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data);
 void publish_reading(const AllSensorsReadings_t *AllSensorsReadings, const ErrorId_t err_id);
+void Wifi_Stop(void);
 #endif
