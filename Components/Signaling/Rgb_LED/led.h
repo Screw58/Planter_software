@@ -25,8 +25,7 @@
 #define LED_RGB_CHANNEL_BLUE  LEDC_CHANNEL_2
 
 #define LED_RGB_VCC_PIN       GPIO_NUM_16
-#define GPIO_LEVEL_HIGH       1
-#define GPIO_LEVEL_LOW        0
+
 //======================================[TYPEDEFS]======================================//
 typedef enum
 {
