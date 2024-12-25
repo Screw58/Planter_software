@@ -32,6 +32,7 @@ static led_colour_cfg_t led_colours_matrix[LED_COLOUR_MAX] = {
    { 0,   255, 255}, // CYAN
 };
 
+
 gptimer_event_callbacks_t cbs = {
    .on_alarm = LED_Timer_Alarm,  // register user callback
 };
@@ -116,8 +117,9 @@ bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *e
 
    if(led_blink_counter < blink_period_max)
    {
-      pin_level ^= 1;
-      gpio_set_level(LED_RGB_VCC_PIN, pin_level);
+      // pin_level ^= 1;
+      // gpio_set_level(LED_RGB_VCC_PIN, pin_level);
+      GPIO_TogglePin(LED_RGB_VCC_PIN, pin_level);
       led_blink_counter++;
    }
    else
@@ -190,12 +192,13 @@ void LED_Init(void)
 void Turn_LED_On(led_colours_t colour)
 {
    LED_set_colour(colour);
-   gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_HIGH);
+   GPIO_SetPinHigh(LED_RGB_VCC_PIN);
 }
 
 void Turn_LED_Off(void)
 {
-   gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_LOW);
+   // gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_LOW);
+   GPIO_SetPinLow(LED_RGB_VCC_PIN);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_RED].led_channel, 0);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_GREEN].led_channel, 0);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_BLUE].led_channel, 0);

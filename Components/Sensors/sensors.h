@@ -14,9 +14,10 @@
 #include "i2c.h"
 
 //=================================[MACROS AND DEFINES]=================================//
+#define ERROR_NOT_PRESENT 0
+#define ERROR_PRESENT     1
 
 /* Defines for I2C bus */
-
 #define I2C_SENSORS_SDA_PIN GPIO_NUM_21
 #define I2C_SENSORS_SCL_PIN GPIO_NUM_22
 #define PULLUP_ENABLE       1
@@ -39,7 +40,7 @@
 #define AHT15_CALIB_BIT_MASK       0x08
 
 /* Defines for soil humidity sensor */
-#define SOIL_SENS_ADC_CHANNEL ADC1_CHANNEL_6
+#define SOILSENS_ADC_CHANNEL  ADC_CHANNEL_6 /*IO 34*/
 #define SOIL_SENS_MEAS_OFFSET 200
 #define SOIL_MAX_VAL          1400
 #define SOIL_MIN_VAL          2000
@@ -57,10 +58,12 @@ typedef float temp_celsius_t;
 typedef float hum_percnt_t;
 typedef uint8_t soilmoist_percnt_t;
 typedef uint32_t illum_lux_t;
+typedef uint8_t SensErrType_t;
 
 typedef struct {
    adc_channel_t adc_channel;
    soilmoist_percnt_t soil_moisture;
+   SensErrType_t SoilSensErr;
 } SoilSens_t;
 
 typedef struct {
@@ -68,12 +71,14 @@ typedef struct {
    temp_celsius_t temperature;
    i2c_addr_t i2caddr;
    i2c_master_dev_handle_t i2c_dev_handle;
+   SensErrType_t Aht15SensErr;
 } Aht15Sens_t;
 
 typedef struct {
    illum_lux_t illuminance;
    i2c_addr_t i2caddr;
    i2c_master_dev_handle_t i2c_dev_handle;
+   SensErrType_t BH1750SensErr;
 } BH1750Sens_t;
 
 typedef struct {
@@ -83,10 +88,31 @@ typedef struct {
    illum_lux_t illuminance;
 } AllSensorsReadings_t;
 
+/* AllSensorErrors_t
+   - soilsens - read
+typedef struct {
+   uint16_t SoilSensErr  : 1;
+   uint16_t Aht15BusyErr : 1;
+   uint16_t Aht15CalibErr: 1;
+   uint16_t I2cBusErr    : 1;
+   uint16_t              : 0;
+} ErrorFlags_t;
+*/
+/* czytac wszystkie pomiary najpierw do error handlera, tam bazując na inputach usera
+   poustawiać jakieś warningi i przekazac struktury do main funkcji*/
 //=================================[EXPORTED VARIABLES]=================================//
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
+/*!
+ * \brief:
+ * \details:
+ */
 void SensorsInit(void);
+
+/*!
+ * \brief:
+ * \details:
+ */
 void TakeSensorMeasurements(AllSensorsReadings_t *sensors_readings);
 
 #endif

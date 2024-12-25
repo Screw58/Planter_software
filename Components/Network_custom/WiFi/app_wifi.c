@@ -15,32 +15,28 @@
 
 // #include "esp_sntp.h"
 // #include "mqtt_client.h"
-// #include "secret_data.h"
-
+#include "secret_data.h"
+#include "UserConfig.h"
 //==================================[EXTERN VARIABLES]==================================//
 
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
 
-#define MAX_RETRY 10
+#define MAX_RETRY_NUM MAX_NO_CONNECTION_ATTEMPS
 
-
-#define WIFI_SSID "SIL_117"
-#define WIFI_PASS "wyprosi60"
 //==================================[PRIVATE TYPEDEFS]==================================//
 
 //==================================[STATIC VARIABLES]==================================//
-static int cnt_retry = 0;
-static wifi_conn_params_f wifi_params;
+static uint8_t ConnectionRetry_Cnt = 0;
+static Wifi_Callback_t Wifi_Callbacks;
+
 static struct timeval time_in_sec;
-// static esp_mqtt_client_handle_t mqtt_client = NULL;
-// static void handle_mqtt_events (void *handler_args, esp_event_base_t base, int32_t event_id, void * event_data);
+static WifiStatus_t Wifi_status;
+
 //==================================[GLOBAL VARIABLES]==================================//
-// bool wifi_connected = false;
-// bool mqtt_connected = false;
-// void time_sync_callback(struct timeval *tv);
 struct tm time_and_date = { 0 };
 struct timeval *tv = { 0 };
 struct tm *time_and_date_ptr;
+
 //=============================[LOCAL FUNCTION PROTOTYPES]==============================//
 /*!
  * \brief: Handler for some events occurence during wifi connection process
@@ -50,7 +46,6 @@ struct tm *time_and_date_ptr;
  *             -If the esp will be succesfully connected to wifi, then start aws connection process
  */
 static void WifiEventHandler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data);
-
 
 //==================================[LOCAL FUNCTIONS]===================================//
 
@@ -62,25 +57,28 @@ static void WifiEventHandler(void *arg, esp_event_base_t event_base, int32_t eve
    }
    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
    {
-      if(cnt_retry < MAX_RETRY)
+      if(ConnectionRetry_Cnt < MAX_RETRY_NUM)
       {
+         Wifi_status = WIFI_RECONNECTING;
          esp_wifi_connect();
-         cnt_retry++;
+         ConnectionRetry_Cnt++;
+         Wifi_Callbacks.WifiOnReconnecting(ConnectionRetry_Cnt);
       }
       else
       {
-         wifi_params.on_failed();
+         Wifi_status = WIFI_DISCONNECTED;
+         Wifi_Callbacks.WifiOnfailed();
       }
    }
    else if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
    {
-      cnt_retry = 0;
-      wifi_params.on_connected();
+      ConnectionRetry_Cnt = 0;
+      Wifi_status = WIFI_CONNECTED;
+      Wifi_Callbacks.WifiOnConnected();
    }
 }
 
 //==================================[GLOBAL FUNCTIONS]==================================//
-
 
 void WifiConnect(void)
 {
@@ -95,6 +93,8 @@ void WifiConnect(void)
             .threshold.authmode = WIFI_AUTH_WPA2_PSK,
    },
 };
+
+   Wifi_status = WIFI_INIT;
 
    if(nvs_flash_init() != ESP_OK)
    {
@@ -118,11 +118,11 @@ void WifiConnect(void)
    ESP_ERROR_CHECK(esp_wifi_start());
 }
 
-
-void AppWifiConnect(wifi_conn_params_f wifi_callback)
+// Zmienic nazwe i wolac z errorhandlera
+void WifiRegisterCallbacks(Wifi_Callback_t Wifi_StatesCallbacks)
 {
-   wifi_params = wifi_callback;
-   WifiConnect();
+   Wifi_Callbacks = Wifi_StatesCallbacks;
+   // WifiConnect();
 }
 
 HourAndMins_t SNTP_ReadTime(void)
@@ -165,3 +165,10 @@ void Wifi_Stop(void)
 {
    esp_wifi_stop();
 }
+
+WifiStatus_t GetWifiStatus(void)
+{
+   return Wifi_status;
+}
+//!< TODO - zmienic nazwe funkcji ktora handluje callbacki i dodac je w errorhandlerze
+//

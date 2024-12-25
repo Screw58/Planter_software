@@ -17,10 +17,10 @@
 #include "esp_err.h"
 
 //=================================[MACROS AND DEFINES]=================================//
-#define ADC_SOILSENS_ADC_CH6 ADC_CHANNEL_6 /*IO 34*/
-#define ADC_BATTERY_ADC_CH7  ADC_CHANNEL_7 /*IO 35*/
-#define ADC_MIN_VOLT         0
-#define ADC_MAX_VOLT         3100          /*unit mV */
+
+
+#define ADC_MIN_VOLT 0
+#define ADC_MAX_VOLT 3100 /*unit mV */
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//
@@ -31,7 +31,7 @@
  * \brief: Read given channel of ADC and return value in mV unit
  * \details:
  */
-uint32_t ADC_Read_mV(adc_channel_t channel);
+esp_err_t ADC_Read_mV(adc_channel_t channel, uint32_t *voltage_mV);
 
 /*!
  * \brief:
@@ -39,4 +39,9 @@ uint32_t ADC_Read_mV(adc_channel_t channel);
  */
 void ADC_Init(void);
 
+/*!
+ * \brief:
+ * \details:
+ */
+esp_err_t ADC_ConfigChannel(adc_channel_t channel);
 #endif

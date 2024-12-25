@@ -11,6 +11,7 @@
 #include "esp_sleep.h"
 //=================================[MACROS AND DEFINES]=================================//
 #define WAKEUP_BUTTON_PIN GPIO_NUM_4
+
 //======================================[TYPEDEFS]======================================//
 typedef struct {
    int hour;

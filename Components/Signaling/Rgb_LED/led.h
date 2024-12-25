@@ -1,6 +1,6 @@
 /*!
 *******************************************************
-* \file: led.c
+* \file: led.h
 * \date: 07.09.2024
 * \author: Jacek Twardoch
 * \brief:
@@ -9,7 +9,7 @@
 #define LED_H_
 
 //======================================[INCLUDES]======================================//
-#include "driver/gpio.h"
+// #include "driver/gpio.h"
 #include "driver/gptimer.h"
 #include "driver/gptimer_etm.h"
 #include "driver/gptimer_types.h"
@@ -88,4 +88,5 @@ void Blink_LED(led_colours_t colour, uint8_t blink_num, uint16_t blink_period_ms
  * \details:
  */
 bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx);
+
 #endif

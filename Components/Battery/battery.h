@@ -12,6 +12,7 @@
 //======================================[INCLUDES]======================================//
 #include "adc.h"
 //=================================[MACROS AND DEFINES]=================================//
+#define BATTERY_ADC_CHANNEL ADC_CHANNEL_7 /*IO 35*/
 
 //======================================[TYPEDEFS]======================================//
 
@@ -19,4 +20,5 @@
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 void CheckBatteryVoltage(void);
+void BatteryInit(void);
 #endif

@@ -55,8 +55,15 @@
 			"gpio.h": "c",
 			"rtc_io.h": "c",
 			"mcustate.h": "c",
-			"userconfig.h": "c"
+			"userconfig.h": "c",
+			"wifi.h": "c"
 		},
-		"terminal.integrated.defaultProfile.windows": "CommandPrompt"
+		"terminal.integrated.defaultProfile.windows": "CommandPrompt",
+		"editor.rulers": [
+			{
+				"column": 140,
+				"color": "#51d351"
+			},
+		]
 	}
 }

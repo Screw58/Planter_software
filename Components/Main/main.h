@@ -41,7 +41,7 @@
 //=================================[EXPORTED VARIABLES]=================================//
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
-// void HardwareInit(void);
+// void PeripInit(void);
 
 
 #endif
