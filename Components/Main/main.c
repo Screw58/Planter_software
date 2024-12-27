@@ -78,11 +78,11 @@ void app_main()
    WifiConnect();
 
    /* Time for aht15 startup */
-   vTaskDelay(pdMS_TO_TICKS(60));
+   vTaskDelay(pdMS_TO_TICKS(5000));
 
 
    // AppWifiConnect(wifi_callback);
-   vTaskDelay(pdMS_TO_TICKS(2000));
+   // vTaskDelay(pdMS_TO_TICKS(2000));
 
    while(1)
    {

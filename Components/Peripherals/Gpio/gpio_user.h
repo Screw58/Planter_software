@@ -23,6 +23,7 @@ void GPIO_SetPinHigh(gpio_num_t gpio);
 
 void GPIO_SetPinLow(gpio_num_t gpio);
 
-void GPIO_TogglePin(gpio_num_t gpio, uint8_t gpio_current_level);
+void GPIO_TogglePin(gpio_num_t gpio, uint8_t *gpio_current_level);
 
+void GPIO_VccLedPinInit(uint16_t pin_num);
 #endif
