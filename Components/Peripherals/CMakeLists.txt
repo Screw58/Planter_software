@@ -5,6 +5,7 @@
  idf_component_register(SRCS "Adc/adc.c"
                              "I2C/i2c.c"
                              "Gpio/gpio_user.c"
-                    INCLUDE_DIRS "." "./I2C" "./Adc" "./Gpio"
+                             "Timers/GPTimers.c"
+                    INCLUDE_DIRS "." "./I2C" "./Adc" "./Gpio" "./Timers"
                     REQUIRES "esp_adc" "esp_driver_i2c" "esp_driver_gpio" "driver"
                     )

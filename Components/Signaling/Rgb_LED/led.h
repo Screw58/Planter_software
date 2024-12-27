@@ -10,11 +10,12 @@
 
 //======================================[INCLUDES]======================================//
 // #include "driver/gpio.h"
-#include "driver/gptimer.h"
-#include "driver/gptimer_etm.h"
-#include "driver/gptimer_types.h"
+// #include "driver/gptimer.h"
+// #include "driver/gptimer_etm.h"
+// #include "driver/gptimer_types.h"
 #include "driver/ledc.h"
-#include "hal/timer_types.h"
+#include "GPTimers.h"
+// #include "hal/timer_types.h"
 
 //=================================[MACROS AND DEFINES]=================================//
 #define LED_RGB_IO_RED        GPIO_NUM_17
