@@ -74,12 +74,7 @@ static void LED_set_colour(led_colours_t led_colour);
 //==================================[LOCAL FUNCTIONS]===================================//
 static void LED_IO_Init(void)
 {
-   gpio_config_t gpio_cfg = {
-      .pin_bit_mask = (1ULL << LED_RGB_VCC_PIN),
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_DISABLE,
-   };
-   gpio_config(&gpio_cfg);
+   GPIO_VccLedPinInit(LED_RGB_VCC_PIN);
 }
 
 /* Timer Configuration */
