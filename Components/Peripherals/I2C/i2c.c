@@ -52,19 +52,27 @@ void I2C_Add_device_to_I2Cbus(i2c_master_dev_handle_t *const i2c_dev_handle, con
    }
 }
 
-void I2C_ReadData(i2c_master_dev_handle_t dev_handle, uint8_t *read_buf, const size_t data_len)
+esp_err_t I2C_ReadData(i2c_master_dev_handle_t dev_handle, uint8_t *read_buf, const size_t data_len)
 {
+   esp_err_t RetVal = ESP_FAIL;
+
    if((dev_handle != NULL) && (read_buf != NULL))
    {
-      ESP_ERROR_CHECK(i2c_master_receive(dev_handle, read_buf, data_len, I2C_MASTER_TIMEOUT_MS));
+      RetVal = i2c_master_receive(dev_handle, read_buf, data_len, I2C_MASTER_TIMEOUT_MS);
    }
+
+   return RetVal;
 }
 
 
-void I2C_WriteData(i2c_master_dev_handle_t dev_handle, const uint8_t *write_buf, const size_t data_len)
+esp_err_t I2C_WriteData(i2c_master_dev_handle_t dev_handle, const uint8_t *write_buf, const size_t data_len)
 {
+   esp_err_t RetVal = ESP_FAIL;
+
    if((dev_handle != NULL) && (write_buf != NULL))
    {
-      ESP_ERROR_CHECK(i2c_master_transmit(dev_handle, write_buf, data_len, I2C_MASTER_TIMEOUT_MS));
+      RetVal = i2c_master_transmit(dev_handle, write_buf, data_len, I2C_MASTER_TIMEOUT_MS);
    }
+
+   return RetVal;
 }

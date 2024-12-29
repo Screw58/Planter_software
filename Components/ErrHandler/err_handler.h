@@ -14,6 +14,7 @@
 #include "i2c.h"
 #include "sensors.h"
 
+#include "app_wifi.h"
 
 //=================================[MACROS AND DEFINES]=================================//
 

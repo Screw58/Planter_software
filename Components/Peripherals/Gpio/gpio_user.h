@@ -1,47 +1,29 @@
 /*!
 *******************************************************
-* \file:adc.c
-* \date: 11.08.2024
-* \author: Jacek Twardoch
+* \file: gpio_user.h
+* \date:
+* \author:
 * \brief:
 ********************************************************/
-#ifndef ADC_H_
-#define ADC_H_
-
+#ifndef GPIO_H_
+#define GPIO_H_
 //======================================[INCLUDES]======================================//
-#include "esp_adc/adc_cali.h"
-#include "esp_adc/adc_cali_scheme.h"
-#include "esp_adc/adc_oneshot.h"
-#include "hal/adc_types.h"
-
-#include "esp_err.h"
+#include "driver/gpio.h"
 
 //=================================[MACROS AND DEFINES]=================================//
-
-
-#define ADC_MIN_VOLT 0
-#define ADC_MAX_VOLT 3100 /*unit mV */
+#define GPIO_LEVEL_HIGH 1
+#define GPIO_LEVEL_LOW  0
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//
 
 //=============================[GLOBAL FUNCTION PROTOTYPES]=============================//
 
-/*!
- * \brief: Read given channel of ADC and return value in mV unit
- * \details:
- */
-esp_err_t ADC_Read_mV(adc_channel_t channel, uint32_t *voltage_mV);
+void GPIO_SetPinHigh(gpio_num_t gpio);
 
-/*!
- * \brief:
- * \details:
- */
-void ADC_Init(void);
+void GPIO_SetPinLow(gpio_num_t gpio);
 
-/*!
- * \brief:
- * \details:
- */
-esp_err_t ADC_ConfigChannel(adc_channel_t channel);
+void GPIO_TogglePin(gpio_num_t gpio, uint8_t *gpio_current_level);
+
+void GPIO_VccLedPinInit(uint16_t pin_num);
 #endif

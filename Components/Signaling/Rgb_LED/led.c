@@ -8,6 +8,8 @@
 
 //======================================[INCLUDES]======================================//
 #include "led.h"
+#include "gpio_user.h"
+
 //==================================[EXTERN VARIABLES]==================================//
 
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
@@ -15,13 +17,17 @@
 //==================================[PRIVATE TYPEDEFS]==================================//
 
 //==================================[STATIC VARIABLES]==================================//
+/*!
+ * @brief Array to control LED RGB pins and their PWM channels
+ */
 static led_rgb_cfg_t led_rgb[LED_PIN_MAX];
-static uint8_t led_blink_counter;
-static uint8_t colour = 0;
-static gptimer_handle_t timer_handle;
-static uint32_t pin_level = 0;
-static uint8_t led_blink_val = 0;
 
+
+ledtimer_cbk_params_t ledtimer_cbk_params;
+
+/*!
+ * @brief Array that keeps timer PWM values of each RGB pins for defined colours
+ */
 static led_colour_cfg_t led_colours_matrix[LED_COLOUR_MAX] = {
    {255,  0,   0  }, // RED
    { 0,   255, 0  }, // GREEN
@@ -31,9 +37,7 @@ static led_colour_cfg_t led_colours_matrix[LED_COLOUR_MAX] = {
    { 0,   255, 255}, // CYAN
 };
 
-gptimer_event_callbacks_t cbs = {
-   .on_alarm = LED_Timer_Alarm,  // register user callback
-};
+
 //==================================[GLOBAL VARIABLES]==================================//
 
 //=============================[LOCAL FUNCTION PROTOTYPES]==============================//
@@ -47,7 +51,7 @@ static void LED_IO_Init(void);
  * \brief: Read given channel of ADC and return value in mV unit
  * \details:
  */
-static void LED_Timer_Init(void);
+static void LED_Timer_Init(uint32_t frequency_Hz);
 
 /*!
  * \brief: Read given channel of ADC and return value in mV unit
@@ -70,63 +74,48 @@ static void LED_set_colour(led_colours_t led_colour);
 //==================================[LOCAL FUNCTIONS]===================================//
 static void LED_IO_Init(void)
 {
-   gpio_config_t gpio_cfg = {
-      .pin_bit_mask = (1ULL << LED_RGB_VCC_PIN),
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_DISABLE,
-   };
-   gpio_config(&gpio_cfg);
+   GPIO_VccLedPinInit(LED_RGB_VCC_PIN);
 }
 
 /* Timer Configuration */
-static void LED_Timer_Init(void)
+static void LED_Timer_Init(uint32_t frequency_Hz)
 {
-   gptimer_config_t timer_cfg = {
-      .clk_src = GPTIMER_CLK_SRC_DEFAULT,
-      .direction = GPTIMER_COUNT_UP,
-      .resolution_hz = 1 * 1000 * 1000,
-   };
-   ESP_ERROR_CHECK(gptimer_new_timer(&timer_cfg, &timer_handle));
+   GPTimer_LedTimerConfig(frequency_Hz);
+   GPTimer_LedTimerCallbackRegister(LED_Timer_Alarm);
 }
 
 static void LED_Timer_Start(uint8_t blink_val, uint16_t blink_period_ms)
 {
-   gptimer_alarm_config_t tim_alarm_cfg = {
-      .alarm_count = blink_period_ms * 1000,
-      .reload_count = 0,
-      .flags.auto_reload_on_alarm = true,
-   };
-   gptimer_set_alarm_action(timer_handle, &tim_alarm_cfg);
-   led_blink_counter = 0;
-   pin_level = 0;
-   led_blink_val = blink_val;
-   ESP_ERROR_CHECK(gptimer_register_event_callbacks(timer_handle, &cbs, (void *)&led_blink_val));
-   ESP_ERROR_CHECK(gptimer_enable(timer_handle));
-   ESP_ERROR_CHECK(gptimer_start(timer_handle));
+
+   ledtimer_cbk_params.led_blink_counter = 0;
+   ledtimer_cbk_params.pin_level = 0;
+   ledtimer_cbk_params.led_blink_val = blink_val;
+   GPTimer_LedTimerStart(blink_period_ms, &ledtimer_cbk_params);
 }
 
-bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx)
+bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_data)
 {
-   uint8_t blink_amount = 0;
+
    uint8_t blink_period_max = 0;
+   ledtimer_cbk_params_t *cbk_params;
 
-   blink_amount = *(uint8_t *)user_ctx;
-   blink_period_max = (blink_amount * 2) - 1;
+   cbk_params = (ledtimer_cbk_params_t *)user_data;
 
-   if(led_blink_counter < blink_period_max)
+   blink_period_max = (cbk_params->led_blink_val * 2) - 1;
+
+
+   if(cbk_params->led_blink_counter < blink_period_max)
    {
-      pin_level ^= 1;
-      gpio_set_level(LED_RGB_VCC_PIN, pin_level);
-      led_blink_counter++;
+      // cbk_params->pin_level ^= 1;
+      GPIO_TogglePin(LED_RGB_VCC_PIN, &cbk_params->pin_level);
+      cbk_params->led_blink_counter++;
    }
    else
    {
       Turn_LED_Off();
       // turn off the counter
-      gptimer_stop(timer_handle);
-      gptimer_disable(timer_handle);
-      // Turn_LED_Off();
-      led_blink_val = 0;
+      GPTimer_LedTimerStop();
+      cbk_params->led_blink_val = 0;
    }
 
    return true;
@@ -182,19 +171,20 @@ void LED_Init(void)
    }
 
    LED_IO_Init();
-   LED_Timer_Init();
+   LED_Timer_Init(1000);
 }
 
 
 void Turn_LED_On(led_colours_t colour)
 {
    LED_set_colour(colour);
-   gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_HIGH);
+   GPIO_SetPinHigh(LED_RGB_VCC_PIN);
 }
 
 void Turn_LED_Off(void)
 {
-   gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_LOW);
+   // gpio_set_level(LED_RGB_VCC_PIN, GPIO_LEVEL_LOW);
+   GPIO_SetPinLow(LED_RGB_VCC_PIN);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_RED].led_channel, 0);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_GREEN].led_channel, 0);
    ledc_stop(LEDC_LOW_SPEED_MODE, led_rgb[LED_PIN_BLUE].led_channel, 0);

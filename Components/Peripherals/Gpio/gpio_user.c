@@ -1,14 +1,13 @@
 /*!
 ******************************************************************
-* \file:battery.c
-* \date: 25.08.2024
+* \file:
+* \date:
 * \author:
 * \brief:
 ******************************************************************/
 
 //======================================[INCLUDES]======================================//
-#include "battery.h"
-#include "esp_log.h"
+#include "gpio_user.h"
 //==================================[EXTERN VARIABLES]==================================//
 
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
@@ -24,29 +23,32 @@
 //==================================[LOCAL FUNCTIONS]===================================//
 
 //==================================[GLOBAL FUNCTIONS]==================================//
-void BatteryInit(void)
+
+void GPIO_SetPinHigh(gpio_num_t gpio)
 {
-   ADC_ConfigChannel(BATTERY_ADC_CHANNEL);
+   gpio_set_level(gpio, GPIO_LEVEL_HIGH);
 }
 
-void CheckBatteryVoltage(void)
+void GPIO_SetPinLow(gpio_num_t gpio)
 {
-   esp_err_t EspErr = ESP_OK;
-   uint32_t battery_voltage_mV = 0;
-   EspErr = ADC_Read_mV(BATTERY_ADC_CHANNEL, &battery_voltage_mV);
+   gpio_set_level(gpio, GPIO_LEVEL_LOW);
+}
 
-   if((battery_voltage_mV > ADC_MIN_VOLT) && (battery_voltage_mV < ADC_MAX_VOLT))
-   {
-      battery_voltage_mV = battery_voltage_mV * 2;
-      // !<TODO
-      //   if(battery_voltage_mV <= BATTERY_MIN_THREESHOLD)
-      //   {
-      //     /* set low battery warning!*/
-      //   }
-   }
-   else
-   {
-      /* Err_handle */
-   }
-   ESP_LOGI("battery", "BATTERY VOLTAGE IS: %ld", battery_voltage_mV);
+void GPIO_TogglePin(gpio_num_t gpio, uint8_t *gpio_current_level)
+{
+   *gpio_current_level ^= 1;
+   *gpio_current_level &= 1;
+   gpio_set_level(gpio, *gpio_current_level);
+}
+//   pin_level ^= 1;
+//   gpio_set_level(LED_RGB_VCC_PIN, pin_level);
+
+void GPIO_VccLedPinInit(uint16_t pin_num)
+{
+   gpio_config_t gpio_cfg = {
+      .pin_bit_mask = (1ULL << pin_num),
+      .mode = GPIO_MODE_OUTPUT,
+      .pull_up_en = GPIO_PULLUP_DISABLE,
+   };
+   gpio_config(&gpio_cfg);
 }

@@ -1,6 +1,6 @@
 /*!
 *******************************************************
-* \file: led.c
+* \file: led.h
 * \date: 07.09.2024
 * \author: Jacek Twardoch
 * \brief:
@@ -9,12 +9,13 @@
 #define LED_H_
 
 //======================================[INCLUDES]======================================//
-#include "driver/gpio.h"
-#include "driver/gptimer.h"
-#include "driver/gptimer_etm.h"
-#include "driver/gptimer_types.h"
+// #include "driver/gpio.h"
+// #include "driver/gptimer.h"
+// #include "driver/gptimer_etm.h"
+// #include "driver/gptimer_types.h"
 #include "driver/ledc.h"
-#include "hal/timer_types.h"
+#include "GPTimers.h"
+// #include "hal/timer_types.h"
 
 //=================================[MACROS AND DEFINES]=================================//
 #define LED_RGB_IO_RED        GPIO_NUM_17
@@ -25,8 +26,7 @@
 #define LED_RGB_CHANNEL_BLUE  LEDC_CHANNEL_2
 
 #define LED_RGB_VCC_PIN       GPIO_NUM_16
-#define GPIO_LEVEL_HIGH       1
-#define GPIO_LEVEL_LOW        0
+
 //======================================[TYPEDEFS]======================================//
 typedef enum
 {
@@ -89,4 +89,5 @@ void Blink_LED(led_colours_t colour, uint8_t blink_num, uint16_t blink_period_ms
  * \details:
  */
 bool LED_Timer_Alarm(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx);
+
 #endif
