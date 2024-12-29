@@ -401,3 +401,10 @@ void TakeSensorMeasurements(AllSensorsReadings_t *sensors_readings)
    sensors_readings->illuminance = lightsensor1.illuminance;
    // AreMeasurementsReady = true;
 }
+
+void CheckSensorErrors(AllSensorsErrors_t *sensor_errors)
+{
+   sensor_errors->SoilSensErr = soilsensor1.SoilSensErr;
+   sensor_errors->Aht15SensErr = aht15sensor1.Aht15SensErr;
+   sensor_errors->BH1750SensErr = lightsensor1.BH1750SensErr;
+}

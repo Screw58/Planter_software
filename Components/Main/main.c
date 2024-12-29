@@ -21,7 +21,7 @@
 
 //==================================[STATIC VARIABLES]==================================//
 static volatile AllSensorsReadings_t AllSensorsReadings = { 0 };
-
+static volatile AllSensorsErrors_t AllSensorsErrors = { 0 };
 //==================================[GLOBAL VARIABLES]==================================//
 WifiStatus_t WifiStatus;
 MqttStatus_t MqttStatus;
@@ -80,10 +80,6 @@ void app_main()
    /* Time for aht15 startup */
    vTaskDelay(pdMS_TO_TICKS(5000));
 
-
-   // AppWifiConnect(wifi_callback);
-   // vTaskDelay(pdMS_TO_TICKS(2000));
-
    while(1)
    {
       /* Wait until the Mqtt client connects to the server */
@@ -97,10 +93,11 @@ void app_main()
          // if(SensorsInitStatus == INIT_OK)
          // {
          TakeSensorMeasurements(&AllSensorsReadings);
-         ErrId = CheckErrors();
+         CheckSensorErrors(&AllSensorsErrors);
          CheckBatteryVoltage();
          //}
-         // Mqtt_Publish_Readings(&AllSensorsReadings, ErrId);
+         Mqtt_Publish_Readings(&AllSensorsReadings);
+         Mqtt_Publish_Errors(&AllSensorsErrors);
          vTaskDelay(pdMS_TO_TICKS(7000));
          GoToSleep();
       }
