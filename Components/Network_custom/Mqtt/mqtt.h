@@ -17,9 +17,11 @@
 
 
 //=================================[MACROS AND DEFINES]=================================//
-#define TEST_TOPIC      "/home/sensors"
-#define MQTT_BROKER_URL "mqtt://192.168.0.100"
-#define TAG_MQTT        "mqtt_file"
+#define DEVICE_ID             "dev_1"
+#define SENSOR_READINGS_TOPIC "/home/sensors_readings"
+#define SENSOR_ERRORS_TOPIC   "/home/sensors_errors"
+#define MQTT_BROKER_URL       "mqtt://192.168.0.100"
+#define TAG_MQTT              "mqtt_file"
 //======================================[TYPEDEFS]======================================//
 typedef void (*MqttConnected_f)(void);
 typedef void (*MqttError_f)(void);
@@ -51,7 +53,7 @@ void Mqtt_Connect(void);
  * \brief:
  * \details:
  */
-void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings, const ErrorId_t err_id);
+void Mqtt_Publish_Readings(const AllSensorsReadings_t *const AllSensorsReadings);
 
 /*!
  * \brief:
@@ -70,5 +72,11 @@ void Mqtt_Disconnect(void);
  * \details:
  */
 void MqttRegisterCallbacks(Mqtt_Callback_t UserCallbacks);
+
+/*!
+ * \brief:
+ * \details:
+ */
+void Mqtt_Publish_Errors(const AllSensorsErrors_t *const AllSensorsErrors);
 
 #endif

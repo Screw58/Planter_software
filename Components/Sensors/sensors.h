@@ -88,6 +88,12 @@ typedef struct {
    illum_lux_t illuminance;
 } AllSensorsReadings_t;
 
+typedef struct {
+   SensErrType_t SoilSensErr;
+   SensErrType_t Aht15SensErr;
+   SensErrType_t BH1750SensErr;
+} AllSensorsErrors_t;
+
 /* AllSensorErrors_t
    - soilsens - read
 typedef struct {
@@ -115,4 +121,9 @@ void SensorsInit(void);
  */
 void TakeSensorMeasurements(AllSensorsReadings_t *sensors_readings);
 
+/*!
+ * \brief:
+ * \details:
+ */
+void CheckSensorErrors(AllSensorsErrors_t *sensor_errors);
 #endif
