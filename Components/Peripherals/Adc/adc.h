@@ -19,8 +19,10 @@
 //=================================[MACROS AND DEFINES]=================================//
 
 
-#define ADC_MIN_VOLT 0
-#define ADC_MAX_VOLT 3100 /*unit mV */
+#define ADC_MIN_VOLT                  0
+#define ADC_MAX_VOLT                  3100 /*unit mV */
+
+#define NUMBER_OF_MEASUREMENT_SAMPLES 15
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//

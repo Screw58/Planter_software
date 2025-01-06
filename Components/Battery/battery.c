@@ -37,6 +37,9 @@ void CheckBatteryVoltage(void)
    esp_err_t EspErr = ESP_OK;
    int battery_voltage_mV = 0;
 
+   GPIO_SetPinHigh(BATTERY_VOLT_MEAS_ENABLE_PIN);
+   EspErr = ADC_Read_mV(BATTERY_ADC_CHANNEL, &battery_voltage_mV);
+   GPIO_SetPinLow(BATTERY_VOLT_MEAS_ENABLE_PIN);
    if((battery_voltage_mV > ADC_MIN_VOLT) && (battery_voltage_mV < ADC_MAX_VOLT))
    {
       battery_voltage_mV = battery_voltage_mV * 2;
@@ -50,5 +53,5 @@ void CheckBatteryVoltage(void)
    {
       /* Err_handle */
    }
-   ESP_LOGI("battery", "BATTERY VOLTAGE IS: %ld", battery_voltage_mV);
+   ESP_LOGI("battery", " BATTERY VOLTAGE IS: %d", battery_voltage_mV);
 }

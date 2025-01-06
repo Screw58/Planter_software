@@ -14,6 +14,8 @@
 //=================================[MACROS AND DEFINES]=================================//
 #define BATTERY_ADC_CHANNEL ADC_CHANNEL_7 /*IO 35*/
 
+/* Pin which turns on the transoptor output for voltage divider (2 resistors connected to battery) */
+#define BATTERY_VOLT_MEAS_ENABLE_PIN GPIO_NUM_32
 //======================================[TYPEDEFS]======================================//
 
 //=================================[EXPORTED VARIABLES]=================================//
