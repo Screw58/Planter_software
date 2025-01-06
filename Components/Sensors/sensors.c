@@ -43,7 +43,7 @@ static BH1750Sens_t lightsensor1;
  * \details: Take value in mV, calculate it according to special formula,
  *           and return value in % [0-100]
  */
-static uint8_t SoilSensCalc_mVtoPerc(const uint32_t SoilSensVolt_mV);
+static uint8_t SoilSensCalc_mVtoPerc(const int SoilSensVolt_mV);
 
 /*!
  * \brief: Trigger measurement of AHT15 sensor
@@ -123,7 +123,7 @@ static void BH1750_TakeMeasurement(BH1750Sens_t *sensor);
 static void SoilSensorReadResult(SoilSens_t *sensor)
 {
    esp_err_t EspErr = ESP_OK;
-   uint32_t AdcResultVolt_mV = 0;
+   int AdcResultVolt_mV = 0;
    uint8_t SoilMoistRes_perc = 0;
 
    // for(int i = 0; i <= SAMPLE_CNT; ++i)
@@ -136,7 +136,7 @@ static void SoilSensorReadResult(SoilSens_t *sensor)
    SoilMoistRes_perc = SoilSensCalc_mVtoPerc(AdcResultVolt_mV);
 
    sensor->soil_moisture = SoilMoistRes_perc;
-   ESP_LOGI("adc_measurement", "adc voltage is equal to : %lu ", AdcResultVolt_mV);
+   ESP_LOGI("adc_measurement", "adc voltage is equal to : %d ", AdcResultVolt_mV);
    if(SoilMoistRes_perc > 100)
    {
       GlobalErrorsTable.ErrorsStruct.SoilSensErr = ERROR_PRESENT;
@@ -152,11 +152,12 @@ static void SoilSensorReadResult(SoilSens_t *sensor)
    }
 }
 
-static uint8_t SoilSensCalc_mVtoPerc(const uint32_t SoilSensVolt_mV)
+static uint8_t SoilSensCalc_mVtoPerc(const int SoilSensVolt_mV)
 {
    int SoilSensWithOffset_mV = 0;
    uint8_t SoilSensResult_perc = 0;
 
+   // !< TODO - check if SoilSensVolt_mV is positive, if negative - start alert
    SoilSensWithOffset_mV = SoilSensVolt_mV - SOIL_SENS_MEAS_OFFSET;
    SoilSensResult_perc = ((SOIL_MIN_VAL - SoilSensWithOffset_mV) * 100) / (SOIL_MIN_VAL - SOIL_MAX_VAL);
 

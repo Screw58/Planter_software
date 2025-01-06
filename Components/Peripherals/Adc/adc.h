@@ -31,7 +31,7 @@
  * \brief: Read given channel of ADC and return value in mV unit
  * \details:
  */
-esp_err_t ADC_Read_mV(adc_channel_t channel, uint32_t *voltage_mV);
+esp_err_t ADC_Read_mV(adc_channel_t channel, int *voltage_mV);
 
 /*!
  * \brief:

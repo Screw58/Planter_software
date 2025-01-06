@@ -35,8 +35,7 @@ void BatteryInit(void)
 void CheckBatteryVoltage(void)
 {
    esp_err_t EspErr = ESP_OK;
-   uint32_t battery_voltage_mV = 0;
-   EspErr = ADC_Read_mV(BATTERY_ADC_CHANNEL, &battery_voltage_mV);
+   int battery_voltage_mV = 0;
 
    if((battery_voltage_mV > ADC_MIN_VOLT) && (battery_voltage_mV < ADC_MAX_VOLT))
    {

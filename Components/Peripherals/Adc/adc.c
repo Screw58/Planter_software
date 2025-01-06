@@ -59,7 +59,7 @@ esp_err_t ADC_ConfigChannel(adc_channel_t channel)
    return EspErr;
 }
 
-esp_err_t ADC_Read_mV(adc_channel_t channel, uint32_t *voltage_mV)
+esp_err_t ADC_Read_mV(adc_channel_t channel, int *voltage_mV)
 {
    esp_err_t EspErr = ESP_OK;
    uint32_t raw_data = 0;
