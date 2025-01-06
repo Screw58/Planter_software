@@ -72,6 +72,7 @@ void app_main()
    //{
    // SensorsInitStatus = SensorsInit();
    SensorsInit();
+   BatteryInit();
    //}
    RegisterAllCallbacks();
 

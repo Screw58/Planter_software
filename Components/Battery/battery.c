@@ -9,6 +9,7 @@
 //======================================[INCLUDES]======================================//
 #include "battery.h"
 #include "esp_log.h"
+#include "gpio_user.h"
 //==================================[EXTERN VARIABLES]==================================//
 
 //=============================[PRIVATE MACROS AND DEFINES]=============================//
@@ -27,6 +28,8 @@
 void BatteryInit(void)
 {
    ADC_ConfigChannel(BATTERY_ADC_CHANNEL);
+
+   GPIO_BatteryPinInit(BATTERY_VOLT_MEAS_ENABLE_PIN);
 }
 
 void CheckBatteryVoltage(void)

@@ -52,3 +52,14 @@ void GPIO_VccLedPinInit(uint16_t pin_num)
    };
    gpio_config(&gpio_cfg);
 }
+
+void GPIO_BatteryPinInit(uint16_t pin_num)
+{
+   gpio_config_t gpio_cfg = {
+      .pin_bit_mask = (1ULL << pin_num),
+      .mode = GPIO_MODE_OUTPUT,
+      .pull_up_en = GPIO_PULLUP_DISABLE,
+      .pull_down_en = GPIO_PULLDOWN_ENABLE,
+   };
+   gpio_config(&gpio_cfg);
+}
